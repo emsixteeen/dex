@@ -78,6 +78,22 @@ func TestHandleCallback(t *testing.T) {
 			},
 		},
 		{
+			name:               "simpleCaseWithGroupAsString",
+			userIDKey:          "", // not configured
+			userNameKey:        "", // not configured
+			expectUserID:       "subvalue",
+			expectUserName:     "namevalue",
+			expectGroups:       []string{"group1"},
+			expectedEmailField: "emailvalue",
+			token: map[string]interface{}{
+				"sub":            "subvalue",
+				"name":           "namevalue",
+				"groups":         "group1",
+				"email":          "emailvalue",
+				"email_verified": true,
+			},
+		},
+		{
 			name:               "customEmailClaim",
 			userIDKey:          "", // not configured
 			userNameKey:        "", // not configured
@@ -217,6 +233,23 @@ func TestHandleCallback(t *testing.T) {
 			},
 		},
 		{
+			name:                      "customGroupsKeyWithString",
+			groupsKey:                 "cognito:groups",
+			expectUserID:              "subvalue",
+			expectUserName:            "namevalue",
+			expectedEmailField:        "emailvalue",
+			expectGroups:              []string{"group1"},
+			scopes:                    []string{"groups"},
+			insecureSkipEmailVerified: true,
+			token: map[string]interface{}{
+				"sub":            "subvalue",
+				"name":           "namevalue",
+				"user_name":      "username",
+				"email":          "emailvalue",
+				"cognito:groups": "group1",
+			},
+		},
+		{
 			name:                      "customGroupsKeyButGroupsProvided",
 			groupsKey:                 "cognito:groups",
 			expectUserID:              "subvalue",
@@ -232,6 +265,24 @@ func TestHandleCallback(t *testing.T) {
 				"email":          "emailvalue",
 				"groups":         []string{"group1", "group2"},
 				"cognito:groups": []string{"group3", "group4"},
+			},
+		},
+		{
+			name:                      "customGroupsKeyButGroupsProvidedAsString",
+			groupsKey:                 "cognito:groups",
+			expectUserID:              "subvalue",
+			expectUserName:            "namevalue",
+			expectedEmailField:        "emailvalue",
+			expectGroups:              []string{"group1"},
+			scopes:                    []string{"groups"},
+			insecureSkipEmailVerified: true,
+			token: map[string]interface{}{
+				"sub":            "subvalue",
+				"name":           "namevalue",
+				"user_name":      "username",
+				"email":          "emailvalue",
+				"groups":         "group1",
+				"cognito:groups": "group1",
 			},
 		},
 	}

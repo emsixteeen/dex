@@ -327,8 +327,21 @@ func (c *oidcConnector) createIdentity(ctx context.Context, identity connector.I
 		groupsKey := "groups"
 		vs, found := claims[groupsKey].([]interface{})
 		if !found {
+			vss, founds := claims[groupsKey].(string)
+			if founds {
+				vs, found = []interface{}{vss}, founds
+			}
+		}
+
+		if !found {
 			groupsKey = c.groupsKey
 			vs, found = claims[groupsKey].([]interface{})
+			if !found {
+				vss, founds := claims[groupsKey].(string)
+				if founds {
+					vs, found = []interface{}{vss}, founds
+				}
+			}
 		}
 
 		if found {
